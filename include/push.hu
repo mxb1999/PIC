@@ -1,0 +1,18 @@
+/** 
+ * Framework for particle push, will be fairly barebones initially, more robust once iterative methods are introduced
+ * 
+ * 
+*/
+#ifndef PUSH
+    #define PUSH
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <cmath>
+    #include <string.h>
+    #include <hdf5/serial/hdf5.h>
+    #include <omp.h>
+    #include "grid.h"
+    #include "cuda_runtime.h"
+
+void push_stage(Particle* p, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int stepnum);
+#endif
