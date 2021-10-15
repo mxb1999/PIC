@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "*.hu": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "climits": "cpp"
     }
 }

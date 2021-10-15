@@ -71,7 +71,7 @@ c = GRID_SIZE/4
 cube_x,cube_y,cube_z = get_cube()
 
 
-position_plots = ax.scatter(x[0],y[0],z[0],s=0.8,c=y[0])
+position_plots = ax.scatter(x[0],y[0],z[0],s=3,c=y[0])
 ax.set_xlim(-1,1)
 ax.set_ylim(-1,1)
 ax.set_zlim(-1,1)
@@ -81,7 +81,7 @@ def animate_vector(i):
     #position_plots._offsets3d = (x[i], y[i], z[i])
     #osition_plots.set_array(y[i])
         
-myAnimation = FuncAnimation(fig, animate_vector, frames=np.arange(0,int(shp[0]/100)), blit = False, interval=1)
+myAnimation = FuncAnimation(fig, animate_vector, frames=np.arange(0,shp[0]), blit = False, interval=50)
 #ax.plot_surface(cube_x*a+1, cube_y*b+b/2, cube_z*c+1,alpha=0.1)
 hfile.close()
 print("Saving animation")

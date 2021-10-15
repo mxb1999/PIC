@@ -101,17 +101,17 @@ void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* g
         py = p->py;
         pz = p->pz;
         double pnorm2 = sqrt(px*px + py*py + pz*pz);
-        
-            int stp = stepnum;
-            logger[(stp*grid->numparticles + i) * 3] = p->x;
-            logger[(stp*grid->numparticles + i) * 3 + 1] = p->y;
-            logger[(stp*grid->numparticles + i) * 3 + 2] = p->z;
-        
+        logger[((stepnum - 1)*grid->numparticles + i)*3] = p->x;
+        logger[((stepnum - 1)*grid->numparticles + i)*3 + 1] = p->y;
+        logger[((stepnum - 1)*grid->numparticles + i)*3 + 2] = p->z;
+
     }
 };//main pushing kernel
-void push_stage(Particle* p, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int stepnum)
+void push_stage(Particle* p, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int blocks, int stepnum)
 {
-    particle_push_cu<<<64, 256>>>(p, efield, bfield, grid, step, ppt, logger, stepnum);
+    
+    particle_push_cu<<<blocks, threads_per_block>>>(p, efield, bfield, grid, step, ppt, logger, stepnum);
+    cudaDeviceSynchronize();
     cudaError_t err = cudaGetLastError();
     if(err != cudaSuccess)
     {

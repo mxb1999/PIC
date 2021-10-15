@@ -59,9 +59,9 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
                 rng_t randx = int64RNG(generator);
                 rng_t randy = int64RNG(generator);
                 rng_t randz = int64RNG(generator);
-                p->x = xspan*((double)randx/ULLONG_MAX)-xmin;
-                p->y = yspan*((double)randy/ULLONG_MAX)-ymin;
-                p->z = zspan*((double)randz/ULLONG_MAX)-zmin;
+                p->x = xspan*((double)randx/ULLONG_MAX)+xmin;
+                p->y = yspan*((double)randy/ULLONG_MAX)+ymin;
+                p->z = zspan*((double)randz/ULLONG_MAX)+zmin;
             };}
         break;
     }
