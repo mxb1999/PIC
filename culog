@@ -1,0 +1,182 @@
+==3756739== NVPROF is profiling process 3756739, command: ./cupush
+==3756739== Some kernel(s) will be replayed on device 0 in order to collect all events/metrics.
+==3756739== Profiling application: ./cupush
+==3756739== Profiling result:
+==3756739== Metric result:
+"Device","Kernel","Invocations","Metric Name","Metric Description","Min","Max","Avg"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_per_warp","Instructions per warp",243712.802083,243716.106901,243714.142543
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"branch_efficiency","Branch Efficiency",95.490959%,95.605071%,95.559857%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"warp_execution_efficiency","Warp Execution Efficiency",86.405505%,86.412525%,86.409423%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"warp_nonpred_execution_efficiency","Warp Non-Predicated Execution Efficiency",84.199194%,84.205981%,84.202989%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_replay_overhead","Instruction Replay Overhead",0.000536,0.000541,0.000539
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_load_transactions_per_request","Shared Memory Load Transactions Per Request",0.000000,0.000000,0.000000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_store_transactions_per_request","Shared Memory Store Transactions Per Request",0.000000,0.000000,0.000000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_load_transactions_per_request","Local Memory Load Transactions Per Request",4.000000,4.000000,4.000000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_store_transactions_per_request","Local Memory Store Transactions Per Request",4.000000,4.000000,4.000000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gld_transactions_per_request","Global Load Transactions Per Request",11.633298,11.634574,11.634004
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gst_transactions_per_request","Global Store Transactions Per Request",31.999792,31.999792,31.999792
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_store_transactions","Shared Store Transactions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_load_transactions","Shared Load Transactions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_load_transactions","Local Load Transactions",175001120,175001120,175001120
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_store_transactions","Local Store Transactions",100000640,100000640,100000640
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gld_transactions","Global Load Transactions",138412976,138428157,138421383
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gst_transactions","Global Store Transactions",59999994,59999994,59999994
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_read_transactions","System Memory Read Transactions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_write_transactions","System Memory Write Transactions",5,5,5
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_read_transactions","L2 Read Transactions",55873738,56314953,56108241
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_write_transactions","L2 Write Transactions",160000650,160000662,160000659
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_read_transactions","Device Memory Read Transactions",50118357,50475618,50300474
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_write_transactions","Device Memory Write Transactions",115804325,115924197,115865339
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"global_hit_rate","Global Hit Rate in unified l1/tex",84.773229%,84.864774%,84.822195%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_hit_rate","Local Hit Rate",64.956211%,65.156880%,65.064518%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gld_requested_throughput","Requested Global Load Throughput",64.216748GB/s,64.774298GB/s,64.500995GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gst_requested_throughput","Requested Global Store Throughput",27.375503GB/s,27.613018GB/s,27.496419GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gld_throughput","Global Load Throughput",252.619581GB/s,254.817552GB/s,253.739519GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gst_throughput","Global Store Throughput",109.502012GB/s,110.452070GB/s,109.985678GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_memory_overhead","Local Memory Overhead",86.018224%,86.124733%,86.064295%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tex_cache_hit_rate","Unified Cache Hit Rate",54.561896%,54.653562%,54.606448%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_read_hit_rate","L2 Hit Rate (Texture Reads)",36.603148%,37.216014%,36.916787%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_write_hit_rate","L2 Hit Rate (Texture Writes)",44.567501%,44.725558%,44.638381%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_read_throughput","Device Memory Read Throughput",91.675976GB/s,92.780254GB/s,92.205538GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_write_throughput","Device Memory Write Throughput",211.527359GB/s,213.335081GB/s,212.392152GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tex_cache_throughput","Unified cache to Multiprocessor throughput",989.095053GB/s,997.629488GB/s,993.454459GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_read_throughput","L2 Throughput (Texture Reads)",102.246462GB/s,103.572451GB/s,102.841321GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_write_throughput","L2 Throughput (Texture Writes)",292.006551GB/s,294.540051GB/s,293.296332GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_read_throughput","L2 Throughput (Reads)",102.239264GB/s,103.376980GB/s,102.851727GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_write_throughput","L2 Throughput (Writes)",292.006602GB/s,294.540103GB/s,293.296379GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_read_throughput","System Memory Read Throughput",0.000000B/s,0.000000B/s,0.000000B/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_write_throughput","System Memory Write Throughput",9.568359KB/s,9.651367KB/s,9.609375KB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_load_throughput","Local Memory Load Throughput",319.382944GB/s,322.153966GB/s,320.793645GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_store_throughput","Local Memory Store Throughput",182.504539GB/s,184.087981GB/s,183.310654GB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_load_throughput","Shared Memory Load Throughput",0.000000B/s,0.000000B/s,0.000000B/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_store_throughput","Shared Memory Store Throughput",0.000000B/s,0.000000B/s,0.000000B/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gld_efficiency","Global Memory Load Efficiency",25.419081%,25.421446%,25.420161%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"gst_efficiency","Global Memory Store Efficiency",25.000000%,25.000000%,25.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tex_cache_transactions","Unified cache to Multiprocessor transactions",135442168,135527702,135488690
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_dp","Floating Point Operations(Double Precision)",2549842153,2550108105,2549992104
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_dp_add","Floating Point Operations(Double Precision Add)",599980241,600013485,599998984
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_dp_fma","Floating Point Operations(Double Precision FMA)",624950690,625033800,624997549
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_dp_mul","Floating Point Operations(Double Precision Mul)",699960532,700027020,699998019
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_sp","Floating Point Operations(Single Precision)",274979655,275029521,275001405
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_sp_add","Floating Point Operations(Single Precision Add)",144993213,145009835,145000463
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_sp_fma","Floating Point Operations(Single Precision FMA)",64993221,65009843,65000471
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_sp_mul","Floating Point Operation(Single Precision Mul)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_sp_special","Floating Point Operations(Single Precision Special)",124990138,125006760,124999509
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed","Instructions Executed",773772792,1871739583,1307382641
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_issued","Instructions Issued",774189378,774214617,774199900
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_utilization","Device Memory Utilization","Mid (4)","Mid (4)","Mid (4)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_utilization","System Memory Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_inst_fetch","Issue Stall Reasons (Instructions Fetch)",4.029061%,4.206131%,4.119435%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_exec_dependency","Issue Stall Reasons (Execution Dependency)",41.003514%,41.293473%,41.147184%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_memory_dependency","Issue Stall Reasons (Data Request)",54.372284%,54.704837%,54.536757%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_texture","Issue Stall Reasons (Texture)",0.000000%,0.000000%,0.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_sync","Issue Stall Reasons (Synchronization)",0.000000%,0.000000%,0.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_other","Issue Stall Reasons (Other)",0.005196%,0.005266%,0.005230%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_constant_memory_dependency","Issue Stall Reasons (Immediate constant)",0.004394%,0.008115%,0.005035%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_pipe_busy","Issue Stall Reasons (Pipe Busy)",0.047742%,0.051331%,0.049083%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_efficiency","Shared Memory Efficiency",0.000000%,0.000000%,0.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_fp_32","FP Instructions(Single)",479986407,480019651,480000907
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_fp_64","FP Instructions(Double)",2014871755,2015087841,2014993590
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_integer","Integer Instructions",3069588123,3069659134,3069628820
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_bit_convert","Bit-Convert Instructions",179999982,179999982,179999982
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_control","Control-Flow Instructions",832860957,832993933,832935932
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_compute_ld_st","Load/Store Instructions",1922699454,1922699454,1922699454
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_misc","Misc Instructions",14335803850,14336831124,14336385168
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_inter_thread_communication","Inter-Thread Instructions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"issue_slots","Issue Slots",774189378,774214617,774199900
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"cf_issued","Issued Control-Flow Instructions",47162313,47187694,47172607
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"cf_executed","Executed Control-Flow Instructions",47162313,47187694,47172607
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"ldst_issued","Issued Load/Store Instructions",62546306,62546306,62546306
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"ldst_executed","Executed Load/Store Instructions",62546306,62546306,62546306
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"atomic_transactions","Atomic Transactions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"atomic_transactions_per_request","Atomic Transactions Per Request",0.000000,0.000000,0.000000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_atomic_throughput","L2 Throughput (Atomic requests)",0.000000B/s,0.000000B/s,0.000000B/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_atomic_transactions","L2 Transactions (Atomic requests)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_read_transactions","L2 Transactions (Texture Reads)",55878622,56314427,56102565
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_memory_throttle","Issue Stall Reasons (Memory Throttle)",0.086812%,0.144849%,0.116169%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_not_selected","Issue Stall Reasons (Not Selected)",0.020938%,0.021281%,0.021108%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_write_transactions","L2 Transactions (Texture Writes)",160000634,160000634,160000634
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_data_transmitted","NVLink Total Data Transmitted",768,2944,1056
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_data_received","NVLink Total Data Received",576,3328,828
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_data_transmitted","NVLink User Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_data_received","NVLink User Data Received",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_overhead_data_transmitted","NVLink Overhead Data Transmitted",100.000000%,100.000000%,100.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_overhead_data_received","NVLink Overhead Data Received",100.000000%,100.000000%,100.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_nratom_data_transmitted","NVLink Total Nratom Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_nratom_data_transmitted","NVLink User Nratom Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_ratom_data_transmitted","NVLink Total Ratom Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_ratom_data_transmitted","NVLink User Ratom Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_write_data_transmitted","NVLink Total Write Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_write_data_transmitted","NVLink User Write Data Transmitted",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_transmit_throughput","NVLink Transmit Throughput",45.978516KB/s,177.157227KB/s,63.483398KB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_receive_throughput","NVLink Receive Throughput",34.483398KB/s,200.264648KB/s,49.778320KB/s
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_total_response_data_received","NVLink Total Response Data Received",192,320,248
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_user_response_data_received","NVLink User Response Data Received",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_hp","Floating Point Operations(Half Precision)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_hp_add","Floating Point Operations(Half Precision Add)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_hp_mul","Floating Point Operation(Half Precision Mul)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_count_hp_fma","Floating Point Operations(Half Precision FMA)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_fp_16","HP Instructions(Half)",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"ipc","Executed IPC",0.423243,0.625020,0.513280
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"issued_ipc","Issued IPC",0.423471,0.425688,0.424603
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"issue_slot_utilization","Issue Slot Utilization",10.586769%,10.642203%,10.615065%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sm_efficiency","Multiprocessor Activity",92.851637%,98.500536%,96.842342%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"achieved_occupancy","Achieved Occupancy",0.241161,0.242707,0.242021
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"eligible_warps_per_cycle","Eligible Warps Per Active Cycle",0.426449,0.428779,0.427627
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"shared_utilization","Shared Memory Utilization","Idle (0)","Idle (0)","Idle (0)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_utilization","L2 Cache Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tex_utilization","Unified Cache Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"ldst_fu_utilization","Load/Store Function Unit Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"cf_fu_utilization","Control-Flow Function Unit Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tex_fu_utilization","Texture Function Unit Utilization","Idle (0)","Idle (0)","Idle (0)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"special_fu_utilization","Special Function Unit Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"half_precision_fu_utilization","Half-Precision Function Unit Utilization","Idle (0)","Idle (0)","Idle (0)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"single_precision_fu_utilization","Single-Precision Function Unit Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"double_precision_fu_utilization","Double-Precision Function Unit Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_hp_efficiency","FLOP Efficiency(Peak Half)",0.000000%,0.000000%,0.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_sp_efficiency","FLOP Efficiency(Peak Single)",0.060879%,0.115368%,0.108788%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"flop_dp_efficiency","FLOP Efficiency(Peak Double)",1.129034%,2.139427%,2.017507%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_read_utilization","System Memory Read Utilization","Idle (0)","Idle (0)","Idle (0)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_write_utilization","System Memory Write Utilization","Low (1)","Low (1)","Low (1)"
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_data_transmission_efficiency","NVLink Data Transmission Efficiency",0.000038%,0.000166%,0.000057%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"nvlink_data_receive_efficiency","NVLink Data Receive Efficiency",0.000029%,0.000198%,0.000044%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"stall_sleeping","Issue Stall Reasons (Sleeping)",0.000000%,0.000000%,0.000000%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"pcie_total_data_transmitted","PCIe Total Data Transmitted",0,4608,2142
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"pcie_total_data_received","PCIe Total Data Received",0,4096,1649
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_global_loads","Warp level instructions for global loads",11898000,11898000,11898000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_local_loads","Warp level instructions for local loads",43750280,43750280,43750280
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_shared_loads","Warp level instructions for shared loads",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_surface_loads","Warp level instructions for surface loads",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_global_stores","Warp level instructions for global stores",1875012,1875012,1875012
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_local_stores","Warp level instructions for local stores",25000160,25000160,25000160
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_shared_stores","Warp level instructions for shared stores",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_surface_stores","Warp level instructions for surface stores",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_global_atomics","Warp level instructions for global atom and atom cas",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_global_reductions","Warp level instructions for global reductions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_surface_atomics","Warp level instructions for surface atom and atom cas",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_surface_reductions","Warp level instructions for surface reductions",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_shared_atomics","Warp level shared instructions for atom and atom CAS",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"inst_executed_tex_ops","Warp level instructions for texture",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_read_bytes","Total bytes read from DRAM to L2 cache",1603787424,1615219776,1609615168
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"dram_write_bytes","Total bytes written from L2 cache to DRAM",3705738400,3709574304,3707690853
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"global_load_requests","Total number of global load requests from Multiprocessor",11898000,11898000,11898000
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_load_requests","Total number of local load requests from Multiprocessor",43750280,43750280,43750280
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"surface_load_requests","Total number of surface load requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"global_store_requests","Total number of global store requests from Multiprocessor",1875012,1875012,1875012
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"local_store_requests","Total number of local store requests from Multiprocessor",25000160,25000160,25000160
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"surface_store_requests","Total number of surface store requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"global_atomic_requests","Total number of global atomic requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"global_reduction_requests","Total number of global reduction requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"surface_atomic_requests","Total number of surface atomic requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"surface_reduction_requests","Total number of surface reduction requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_global_load_bytes","Bytes read from L2 for misses in L1 for global loads",639131008,642779616,641017037
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_local_load_bytes","Bytes read from L2 for misses in L1 for local loads",1063667840,1074925696,1069581932
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_surface_load_bytes","Bytes read from L2 for misses in L1 for surface loads",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_global_atomic_store_bytes","Bytes written to L2 from L1 for global atomics",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_local_global_store_bytes","Bytes written to L2 from L1 for local and global stores.",5120020288,5120020288,5120020288
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_surface_store_bytes","Bytes read from L2 for misses in L1 for surface stores",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_read_bytes","System Memory Read Bytes",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"sysmem_write_bytes","System Memory Write Bytes",160,160,160
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"l2_tex_hit_rate","L2 Cache Hit Rate",42.530545%,42.730643%,42.633766%
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"texture_load_requests","Total number of texture Load requests from Multiprocessor",0,0,0
+"Quadro GV100 (0)","particle_push_cu(Particle*, double*, double*, Grid*, double, int, double*, int)",1000,"tensor_precision_fu_utilization","Tensor-Precision Function Unit Utilization","Idle (0)","Idle (0)","Idle (0)"

@@ -1,0 +1,29 @@
+/** 
+ * Framework for particle push, will be fairly barebones initially, more robust once iterative methods are introduced
+ * 
+ * 
+*/
+#ifndef PUSH
+    #define PUSH
+    #include <stdio.h>
+    #include <stdlib.h>
+    #include <cmath>
+    #include <string.h>
+    #include <hdf5/serial/hdf5.h>
+    #include <omp.h>
+    #include "grid.h"
+    #include "cuda_runtime.h"
+    #define CHECKERR(err, lineno){\
+        if(err != cudaSuccess)\
+        {\
+            printf("%d: %s\n", lineno, cudaGetErrorString(err));\
+        }\
+    };
+    //#define LOG
+
+    #define threads_per_block 256
+    #define SMs 30
+    #define blocks_per_sm 32
+    #define max_threads threads_per_block*SMs*blocks_per_sm
+void push_stage(Particle* p, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int blocks, int stepnum, int opt);
+#endif

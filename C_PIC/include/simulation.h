@@ -9,17 +9,18 @@
 
 
 */
-#include <hdf5.h>
+#include <hdf5/serial/hdf5.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
 #ifndef SIMULATION
     #define SIMULATION
+    typedef double part_t; // type to experiment with mixed precision down the line
 
     typedef struct 
     {
-        double* x;
-        double* v;
+        part_t x, y, z;
+        part_t px, py, pz;
     } Particle;
     typedef struct
     {
@@ -43,17 +44,19 @@
         Particle* particles;
         double *jx, *jy, *jz, *rho; //Current and charge density arrays for the mesh
         long long flags;
-        double m_ion;
-        double q_ion;
+        double mass_p;
+        double q_p;
     }Grid;
-    
+    typedef double space_t; // same as above, but for spatial variables
+    typedef double field_t;
+    enum distribution {gaussian, unif};
     #ifndef M_PI
         #define M_PI 3.14159265358979323846
     #endif
     #define GRID grid //the name used to refer to the grid in all functions
 
-    #define M_I GRID->m_ion
-    #define Q_I GRID->q_ion
+    #define M_I GRID->mass_p
+    #define Q_I GRID->q_p
     #define PARTICLES GRID->particles
     #define Jx(i, j, k) ACCESS3D(GRID->jx, i, j, k, ny, nz)
     #define Jy(i, j, k) ACCESS3D(GRID->jy, i, j, k, ny, nz)
@@ -175,6 +178,8 @@
     };
         //printf("Z %f %f\n", dvy_dx, dvx_dy);
 
+    void free_grid(Grid* grid);
+    void setup_grid_constb(Grid* grid, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance, field_t b[3]);
     #define CURLPREV(vector, i, j, k, nx, ny, nz, dx, dy, dz, curl){\
         CURLXPREV(vector, i, j, k, nx, ny, nz, dy, dz, curl);\
         CURLYPREV(vector, i, j, k, nx, ny, nz, dx, dz, curl);\
@@ -221,6 +226,7 @@
     extern void initialize(Grid* grid, double sigma_m, double sigma_e, double dt);
     extern void interpolate_E(Grid* grid, int ix, int iy, int iz, double* target);
     extern void interpolate_B(Grid* grid, int ix, int iy, int iz, double* target);
+    Grid* new_grid(const int nx, const int ny, const int nz, const int numparticles, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, double mass, double charge);
     extern void update_from_particles(Grid* grid, double dt);
     //Constants:
     extern double c;

@@ -8,7 +8,7 @@ import matplotlib.animation as animation
 # Generate data for plotting
 Lx = Ly = 5e-5
 Nx = Ny = 100
-Nt = 1000
+Nt = 475
 x = np.linspace(-Lx, Lx, Nx)
 y = np.linspace(-Lx, Lx, Nx)
 
