@@ -1,7 +1,7 @@
 #ifndef FDTD
 #define FDTD
 
-    #include "simulation.h"
+    #include "simulation.hpp"
 
 
     extern void applyBoundaryTop(double* B, double* E, int numcells);

@@ -2,6 +2,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include "push.h"
 
 double c = 299792458.0;
 double eps0 = 8.85418782e-12;
@@ -10,7 +11,27 @@ double freq = 14.0e6;
 double pi = 3.14159265;
 #define SIZE 200
 
+void test_push(int n, int p)
+{
+    double m = 1e-28;
+    double dims[] = {-5e-5, 5e-5};
+    double dimsy[] = {-5e-5, 5e-5};
+    double dimsz[] = {-5e-5, 5e-5};
+    int gridres = 100;
+    Grid* grid = define_grid(dims, dimsy, dimsz, gridres,gridres,gridres,100, 0);
+    grid->mass_p = m;
+    grid->q_p = 1e-19;
+    int nx = grid->nx;
+    int ny = grid->ny;
+    int nz = grid->nz;
+    field_t b[] = {0, 0, 1e3};
+    setup_grid_constb(grid, unif, unif, 1e3*m,500*m, b);
+    for(int i = 0; i < 1e8; i++) {
+        particle_push(grid, 1e-5, NULL, i);
 
+    }
+    //free_grid(grid);
+}
 void updateH2D_FirstTMz(Grid* grid)
 {
     int nx = NX, ny = NY, nz = NZ;
@@ -87,7 +108,7 @@ void updateH3D(Grid* grid)
                 Hx(i, j, k) = CHxSelf(i, j, k)*Hx(i, j, k) + CHxey(i, j, k)*((Ey(i, j, k+1) - Ey(i, j, k)) - (Ez(i, j+1, k) - Ez(i, j, k)));
 
                 Hy(i, j, k) = CHySelf(i, j, k)*Hy(i, j, k) + CHyex(i, j, k)*((Ez(i+1, j, k) - Ez(i, j, k)) - (Ex(i, j, k+1) - Ex(i, j, k)));
-                
+
                 //if(i == nx/2 && j == ny/2 && k == nz/2)
                // {
                     //printf("%e %e\n", Ex(i, j, k+1) - Ex(i, j, k), Ez(i+1, j, k) - Ez(i, j, k));
@@ -148,17 +169,25 @@ void write_data(double* arr, int* dims, char* target, int dim)
 
 int main()
 {
-    double dims[] = {-5e-5, 5e-5};
-    double dimsy[] = {-5e-5, 5e-5};
-    double dimsz[] = {-5e-5, 5e-5};
-    int gridres = 100;
+    double dims[] = {-1, 1};
+    double dimsy[] = {-1, 1};
+    double dimsz[] = {-1, 1};
+    int gridres = 10;
+    double m = 1e-28;
     Grid* grid = define_grid(dims, dimsy, dimsz, gridres,gridres,gridres,100, 0);
+    grid->mass_p = m;
+    grid->q_p = 1e-19;
+    int nx = grid->nx;
+    int ny = grid->ny;
+    int nz = grid->nz;
+    field_t b[] = {0, 0, 1e-10};
+    setup_grid_constb(grid, unif, unif, 1e3*m,500*m, b);
 
     double constE = 1e-3;
     double constB = 1;
     double dt = 4e-12;
-    int nt = 10000;
-    initialize(grid, 0.0, 0.0, dt);
+    int nt = 1000;
+    //initialize(grid, 0.0, 0.0, dt);
     start_loop3DFDTD(grid,  dt, nt);
     return 0;
 };

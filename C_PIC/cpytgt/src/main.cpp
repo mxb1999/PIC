@@ -36,7 +36,7 @@ void test_push(int n, int p)
     field_t *e_cu, *b_cu;
     cudaError_t err = cudaMalloc(&grid_cu, sizeof(Grid));
     CHECKERR(err, __LINE__)
-    err = cudaMalloc(&particle_cu, sizeof(Particle)*grid->numparticles);
+    err = cudaMalloc(&particle_cu, sizeof(Particle)*grid->num_particles);
     CHECKERR(err, __LINE__)
     err = cudaMalloc(&e_cu, sizeof(field_t)*nx*ny*nz*3);
     CHECKERR(err, __LINE__)
@@ -46,22 +46,22 @@ void test_push(int n, int p)
     CHECKERR(err, __LINE__)
     err = cudaMemcpy(e_cu, grid->e_field, sizeof(field_t)*nx*ny*nz*3, cudaMemcpyHostToDevice);
     CHECKERR(err, __LINE__)
-    err = cudaMemcpy(particle_cu, grid->particles, sizeof(Particle)*grid->numparticles, cudaMemcpyHostToDevice);
+    err = cudaMemcpy(particle_cu, grid->particles, sizeof(Particle)*grid->num_particles, cudaMemcpyHostToDevice);
     CHECKERR(err, __LINE__)
     err = cudaMemcpy(b_cu, grid->b_field, sizeof(field_t)*nx*ny*nz*3, cudaMemcpyHostToDevice);
     CHECKERR(err, __LINE__)
     double time = 1;
     double step = 1e-5;
-    
+
     int nt = 1000;
     part_t* logger_cu, *logger;
     #ifdef LOG
-        logger = (part_t*)malloc(sizeof(part_t)*grid->numparticles*3*(nt));
-        cudaMalloc(&logger_cu, sizeof(part_t)*grid->numparticles*3*(nt));
+        logger = (part_t*)malloc(sizeof(part_t)*grid->num_particles*3*(nt));
+        cudaMalloc(&logger_cu, sizeof(part_t)*grid->num_particles*3*(nt));
     #endif
     int mthreads = max_threads;
-    int ppt = grid->numparticles/((int)max_threads) + 1;
-    int blocks = fmin(grid->numparticles/threads_per_block + 1, SMs*blocks_per_sm);
+    int ppt = grid->num_particles/((int)max_threads) + 1;
+    int blocks = fmin(grid->num_particles/threads_per_block + 1, SMs*blocks_per_sm);
     int interval = nt/10;
     auto begin = std::chrono::high_resolution_clock::now();
     for(int i = 1; i <= nt; i++)
@@ -76,7 +76,7 @@ void test_push(int n, int p)
     }
     auto end = std::chrono::high_resolution_clock::now();
     auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    printf("%d, %d, %e\n", n, grid->numparticles, elapsed.count()*1e-9);
+    printf("%d, %d, %e\n", n, grid->num_particles, elapsed.count()*1e-9);
     cudaDeviceSynchronize();
     begin = std::chrono::high_resolution_clock::now();
     for(int i = 1; i <= nt; i++)
@@ -91,17 +91,17 @@ void test_push(int n, int p)
     }
     end = std::chrono::high_resolution_clock::now();
     elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-    printf("%d, %d, %e\n", n, grid->numparticles, elapsed.count()*1e-9);
+    printf("%d, %d, %e\n", n, grid->num_particles, elapsed.count()*1e-9);
     err = cudaMemcpy(grid, grid_cu, sizeof(Grid), cudaMemcpyDeviceToHost);
     CHECKERR(err, __LINE__)
     err = cudaMemcpy(grid->e_field, e_cu, sizeof(field_t)*nx*ny*nz*3, cudaMemcpyDeviceToHost);
     CHECKERR(err, __LINE__)
-    err = cudaMemcpy(grid->particles, particle_cu, sizeof(Particle)*grid->numparticles, cudaMemcpyDeviceToHost);
+    err = cudaMemcpy(grid->particles, particle_cu, sizeof(Particle)*grid->num_particles, cudaMemcpyDeviceToHost);
     CHECKERR(err, __LINE__)
     err = cudaMemcpy(grid->b_field, b_cu, sizeof(field_t)*nx*ny*nz*3, cudaMemcpyDeviceToHost);
     CHECKERR(err, __LINE__)
     #ifdef LOG
-        err = cudaMemcpy(logger, logger_cu, sizeof(part_t)*grid->numparticles*3*(nt), cudaMemcpyDeviceToHost);
+        err = cudaMemcpy(logger, logger_cu, sizeof(part_t)*grid->num_particles*3*(nt), cudaMemcpyDeviceToHost);
         CHECKERR(err, __LINE__)
         cudaFree(logger_cu);
     #endif
@@ -113,7 +113,7 @@ void test_push(int n, int p)
     #ifdef LOG
         hid_t file, set, space;
         herr_t err_h5;
-        hsize_t dims[] = {(nt), grid->numparticles, 3};
+        hsize_t dims[] = {(nt), grid->num_particles, 3};
         file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
         space = H5Screate_simple(3, dims, NULL);
         set = H5Dcreate2(file, "positions", H5T_IEEE_F64LE, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);

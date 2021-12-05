@@ -1,4 +1,4 @@
-#include "core/simulation.h"
+#include "core/simulation.hpp"
 #include "core/yee.h"
 
 

@@ -1,5 +1,5 @@
 #include "fdtd.h"
-
+#include "push.h"
 static double add_ricker(double time, double location, double dt, Grid* grid)
 {
     double dx = (XMAX-XMIN)/NX;
@@ -79,22 +79,28 @@ void start_loop2DFDTD(Grid* grid, double dt, int nt)
         //}
     }
 
-    
+
 }
 
 void start_loop3DFDTD(Grid* grid, double dt, int nt)
 {
     int nx, ny, nz;
     double dx, dy, dz;
+    hid_t file, set, space;
+    herr_t err_h5;
+    hsize_t dims[] = {(nt), grid->num_particles, 3};
     DEFINE_GRID_CONSTANTS;
     double ratio = 1/sqrt(3);
     dt = sqrt(pow(dx,2) + pow(dy,2)+pow(dz,2))/(c);
     printf("dt %e\n", dt);
+    part_t* logger = (part_t*)malloc(sizeof(part_t)*grid->num_particles*3*(nt));
     for(int time = 0; time < nt; time++)
     {
+        printf("%e\n", Hz(nx/2, ny/2, nz/2));
         updateH3D(grid);
         updateE3D(grid);
-        Ez(nx/2, ny/2, nz/2) += add_ricker(time*dt, 0.0, dt, grid);
+        //particle_push(grid, dt, logger, time);
+        Hz(nx/2, ny/2, nz/2) += add_ricker(time*dt, 0.0, dt, grid);
         if (time % 10 == 0) {
             char filename[100];
             sprintf(filename, "output/dataout%d.csv", time/10);
@@ -103,11 +109,19 @@ void start_loop3DFDTD(Grid* grid, double dt, int nt)
             {
                 for(int j = 0; j < nz-1; j++)
                 {
-                    fprintf(snapshot, "%e, ", Ex((nx-1)/2,i,j));
+                    fprintf(snapshot, "%e, ", Hz((nx)/2,i,j));
                 }
-                fprintf(snapshot, "%e\n", Ex((nx-1)/2,i,nz-1));
+                fprintf(snapshot, "%e\n", Hz((nx)/2,i,nz-1));
             }
             fclose(snapshot);
         }
     }
+    file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    space = H5Screate_simple(3, dims, NULL);
+    set = H5Dcreate2(file, "positions", H5T_IEEE_F64LE, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    err_h5 = H5Dwrite(set, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, logger);
+    err_h5 = H5Dclose(set);
+    err_h5 = H5Sclose(space);
+    err_h5 = H5Fclose(file);
+    free(logger);
 }

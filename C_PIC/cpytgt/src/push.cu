@@ -49,20 +49,20 @@ void get_field(Particle* p, Grid* grid, field_t* efield, field_t* bfield, field_
     e[2] = elocal[2];
 };
 
-__global__ 
+__global__
 void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int stepnum)
 {
     //update each particle according to the fields at its current position
     //will want to seperate the field gather and the particle push steps later, for now focus on basic procedure
     int p_index = (blockIdx.x*blockDim.x + threadIdx.x)*ppt;//base particle
-    int maxnum = grid->numparticles;
+    int maxnum = grid->num_particles;
     if(p_index >= maxnum)
     {
         return;
     }
     maxnum = (p_index + ppt >= maxnum) ? maxnum - 1 : p_index + ppt;
     part_t m = grid->mass_p;
-    part_t q = grid->q_p;  
+    part_t q = grid->q_p;
     for(int i = p_index; i < maxnum; i++)//for each particle assigned to this thread
     {
         Particle* p = p_arr + i;
@@ -124,9 +124,9 @@ void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* g
         p->py = p_temp[1] + elocal[1]*qconst;
         p->pz = p_temp[2] + elocal[2]*qconst;
         #ifdef LOG
-            logger[((stepnum - 1)*grid->numparticles + i)*3] = p->x;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 1] = p->y;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 2] = p->z;
+            logger[((stepnum - 1)*grid->num_particles + i)*3] = p->x;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 1] = p->y;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 2] = p->z;
         #endif
 
     }
@@ -139,8 +139,8 @@ void particle_push(Grid* grid, double step, part_t* logger, int stepnum)
     field_t* efield = grid->e_field;
     field_t* bfield = grid->b_field;
     part_t m = grid->mass_p;
-    part_t q = grid->q_p;  
-    int num_p = grid->numparticles;
+    part_t q = grid->q_p;
+    int num_p = grid->num_particles;
     for(int i = 0; i < num_p; i++)//for each particle assigned to this thread
     {
         Particle* p = p_arr + i;
@@ -203,9 +203,9 @@ void particle_push(Grid* grid, double step, part_t* logger, int stepnum)
         pz = p->pz;
         double pnorm2 = sqrt(px*px + py*py + pz*pz);
         #ifdef LOG
-            logger[((stepnum - 1)*grid->numparticles + i)*3] = p->x;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 1] = p->y;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 2] = p->z;
+            logger[((stepnum - 1)*grid->num_particles + i)*3] = p->x;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 1] = p->y;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 2] = p->z;
         #endif
 
     }

@@ -1,8 +1,8 @@
 #include "fdtd.h"
-#include "grid.h"
+#include "simulation.hpp"
 #include "push.hu"
 #include "rng.hpp"
-
+#define mu0 1.256637062e-6
 
 void initialize(Grid* grid, double sigma_m, double sigma_e, double dt)
 {
@@ -42,7 +42,7 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
     double xmin = grid->xlims[0];
     double ymin = grid->ylims[0];
     double zmin = grid->zlims[0];
-    int nump = grid->numparticles;
+    int nump = grid->num_particles;
     switch(position_distribution)
     {
         case gaussian:
@@ -119,11 +119,33 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
     int nx = grid->nx;
     int ny = grid->ny;
     int nz = grid->nz;
-    for(int i = 0; i < nx*ny*nz*3; i += 3)
-    {
-        hx[i] = b[0];
-        hy[i+1] = b[1];
-        hz[i+2] = b[2];
+    for(int i = 0; i < nx; i++) {
+        for(int j = 0; j < ny; j++) {
+            for(int k = 0; k < nz; k++) {
+                MU(i, j, k) = mu0;
+            }
+        }
+    }
+    for(int i = 0; i < nx-1; i++) {
+        for(int j = 0; j < ny-1; j++) {
+            for(int k = 0; k < nz; k++) {
+                Hz(i, j, k) = b[2]/MU(i, j, k);
+            }
+        }
+    }
+    for(int i = 0; i < nx-1; i++) {
+        for(int j = 0; j < ny; j++) {
+            for(int k = 0; k < nz-1; k++) {
+                Hy(i, j, k) = b[1]/MU(i, j, k);
+            }
+        }
+    }
+    for(int i = 0; i < nx; i++) {
+        for(int j = 0; j < ny-1; j++) {
+            for(int k = 0; k < nz-1; k++) {
+                Hx(i, j, k) = b[0]/MU(i, j, k);
+            }
+        }
     }
 };
 Grid* define_grid(double* dimsx, double* dimsy, double* dimsz,
@@ -183,7 +205,6 @@ Grid* define_grid(double* dimsx, double* dimsy, double* dimsz,
     grid->rho = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->mu = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->eps = (double*)calloc(sizeof(double), nx*ny*nz);
-    grid->particles = (double*)calloc(sizeof(Particle), num_particles);
+    grid->particles = (Particle*)calloc(sizeof(Particle), num_particles);
     return grid;
 };
-            

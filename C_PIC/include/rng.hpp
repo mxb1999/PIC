@@ -1,5 +1,7 @@
 #ifndef RANDNUMS
-#define RANDNUMS 
+#define RANDNUMS
+#include <cmath>
+#include <stdlib.h>
 //Taken from Numerical Recipes in C (3rd Edition)
 typedef unsigned long long rng_t;
 typedef struct

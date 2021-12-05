@@ -1,4 +1,4 @@
-#include "simulation.h"
+#include "simulation.hpp"
 
 //assume linear interpolation -> Energy Conserving algorithm
 void interpolate_E(Grid* grid, int ix, int iy, int iz, double* position, double* target)
@@ -57,5 +57,5 @@ void interpolate_B(Grid* grid, int ix, int iy, int iz, double* position, double*
     target[1] += SB[0*3+1]*By(ix, iy, iz);
     target[1] += SB[2*3+1]*By(ix, iy+1, iz);
     target[2] += SB[0*3+2]*Bz(ix, iy, iz);
-    target[2] += SB[5*3+2]*Bz(ix, iy, iz+1);           
+    target[2] += SB[5*3+2]*Bz(ix, iy, iz+1);
 };

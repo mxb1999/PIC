@@ -1,8 +1,67 @@
 #include "push.hu"
-#include "simulation.h"
-
+#include "simulation.hpp"
 inline __device__
-void get_field_cu(Particle* p, Grid* grid, field_t* efield, field_t* bfield, part_t x, part_t y, part_t z, space_t dx, space_t dy, space_t dz, int nx, int ny, int nz, space_t xmin, space_t ymin, space_t zmin)
+void interpolate_E(Grid* grid, int ix, int iy, int iz, part_t position[3], field_t* target)
+{
+    int nx, ny, nz;
+    space_t dx, dy, dz;
+    DEFINE_GRID_CONSTANTS;
+    //assume energy conserving
+    space_t xdiff = (target[0]- ix*dx)/dx;
+    space_t ydiff = (target[1]-iy*dy)/dy;
+    space_t zdiff = (target[2] - iz*dz)/dz;
+    space_t a[] = {1-xdiff, xdiff, 1-ydiff, ydiff, 1-zdiff, zdiff};
+    space_t SE[] = {a[2*1] * a[2*2],     a[2*0] * a[2*2]    ,   a[2*0] * a[2*1],
+                   0,                   a[2*0+1] * a[2*2]  , a[2*0+1] * a[2*1],
+                   a[2*1+1] * a[2*2],   0                  , a[2*0] * a[2*1+1],
+                   0,                   0                  ,   a[2*0+1] * a[2*1+1],
+                   a[2*1] * a[2*2+1],   a[2*0] * a[2*2+1]  , 0,
+                   0,                   a[2*0+1] * a[2*2+1], 0,
+                   a[2*1+1] * a[2*2+1], 0,                   0,
+                   0,                   0,                   0};
+    //iterate for E in X direction
+    target[0] += SE[0*3+0]*Ex(ix, iy, iz);
+    target[0] += SE[2*3+0]*Ex(ix, iy+1, iz);
+    target[0] += SE[4*3+0]*Ex(ix, iy, iz+1);
+    target[0] += SE[6*3+0]*Ex(ix, iy+1, iz+1);
+    target[1] += SE[0*3+1]*Ey(ix, iy, iz);
+    target[1] += SE[1*3+1]*Ey(ix+1, iy, iz);
+    target[1] += SE[4*3+1]*Ey(ix, iy, iz+1);
+    target[1] += SE[5*3+1]*Ey(ix+1, iy, iz+1);
+    target[2] += SE[0*3+2]*Ez(ix, iy, iz);
+    target[2] += SE[1*3+2]*Ez(ix+1, iy, iz);
+    target[2] += SE[2*3+2]*Ez(ix, iy+1, iz);
+    target[2] += SE[3*3+2]*Ez(ix+1, iy+1, iz);
+};
+inline __device__
+void interpolate_B(Grid* grid, int ix, int iy, int iz, part_t position[3], field_t* target)
+{
+    int nx, ny, nz;
+    space_t dx, dy, dz;
+    DEFINE_GRID_CONSTANTS;
+    //assume energy conserving
+    space_t xdiff = (target[0]- ix*dx)/dx;
+    space_t ydiff = (target[1]-iy*dy)/dy;
+    space_t zdiff = (target[2] - iz*dz)/dz;
+    space_t a[] = {1-xdiff, xdiff, 1-ydiff, ydiff, 1-zdiff, zdiff};
+    space_t SB[] = {a[2*0]  , a[2*1]  , a[2*2],
+                   a[2*0+1], 0       , 0,
+                   0       , a[2*1+1], 0,
+                   0       , 0       , 0,
+                   0       , 0       , 0,
+                   0       , 0       , a[2*2+1],
+                   0       , 0       , 0,
+                   0       , 0       , 0};
+    //add all B components
+    target[0] += SB[0*3+0]*Bx(ix, iy, iz);
+    target[0] += SB[1*3+0]*Bx(ix+1, iy, iz);
+    target[1] += SB[0*3+1]*By(ix, iy, iz);
+    target[1] += SB[2*3+1]*By(ix, iy+1, iz);
+    target[2] += SB[0*3+2]*Bz(ix, iy, iz);
+    target[2] += SB[5*3+2]*Bz(ix, iy, iz+1);
+};
+inline __device__
+void get_field_cu(Particle* p, Grid* grid, field_t* efield[3], field_t* bfield[3], part_t x, part_t y, part_t z, space_t dx, space_t dy, space_t dz, int nx, int ny, int nz, space_t xmin, space_t ymin, space_t zmin)
 {
     //keep it simple for now, just populate with the field recorded in nearest node
     int ix, iy, iz;
@@ -11,8 +70,12 @@ void get_field_cu(Particle* p, Grid* grid, field_t* efield, field_t* bfield, par
     iy = (int)(y - ymin)/dy;
     iz = (int)(z - zmin)/dz;
     offset = ((ix*ny + iy)*(nz) + iz)*3;
-    field_t* blocal = bfield + offset;
-    field_t* elocal = efield + offset;
+    //want to interpolate with 2nd order spline
+    //W(x) = 1/dx^3(-1*x^2 + 3/4*dx^2) if 0<=x<=dx/2
+    //W(x) = 1/dx^3*1/8(2x - 3*dx)^2 if dx/2<=x<=3/2dx
+
+    field_t* blocalx = bfield + offset;
+    field_t* elocaly = efield + offset;
     bfield[0] = blocal[0];
     bfield[1] = blocal[1];
     bfield[2] = blocal[2];
@@ -45,7 +108,7 @@ void get_field(Particle* p, Grid* grid, field_t* efield, field_t* bfield, field_
     e[2] = elocal[2];
 };
 
-__global__ 
+__global__
 void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* grid, double step, int ppt, part_t* logger, int stepnum)
 {
     //update each particle according to the fields at its current position
@@ -93,7 +156,13 @@ void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* g
         p->z = z;
         field_t elocal[3];
         field_t blocal[3];
-        get_field_cu(p, grid, efield, bfield, x, y, z, dx, dy, dz, nx, ny, nz, xmin, ymin, zmin);
+        part_t pos[3] = {x, y, z};
+        int ix, iy, iz;
+        ix = (int)(x - xmin)/dx;
+        iy = (int)(y - ymin)/dy;
+        iz = (int)(z - zmin)/dz;
+        interpolate_E(grid, ix, iy, iz, pos, elocal);
+        interpolate_B(grid, ix, iy, iz, pos, blocal);
         part_t qconst = q*step/2;
         part_t p_temp[3] = {
             px+elocal[0]*qconst,
@@ -129,9 +198,9 @@ void particle_push_cu(Particle* p_arr, field_t* efield, field_t* bfield, Grid* g
         p->py = p_temp[1] + elocal[1]*qconst;
         p->pz = p_temp[2] + elocal[2]*qconst;
         #ifdef LOG
-            logger[((stepnum - 1)*grid->numparticles + i)*3] = p->x;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 1] = p->y;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 2] = p->z;
+            logger[((stepnum - 1)*grid->num_particles + i)*3] = p->x;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 1] = p->y;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 2] = p->z;
         #endif
 
     }
@@ -144,8 +213,8 @@ void particle_push(Grid* grid, double step, part_t* logger, int stepnum)
     field_t* efield = grid->e_field;
     field_t* bfield = grid->b_field;
     part_t m = grid->mass_p;
-    part_t q = grid->q_p;  
-    int num_p = grid->numparticles;
+    part_t q = grid->q_p;
+    int num_p = grid->num_particles;
     for(int i = 0; i < num_p; i++)//for each particle assigned to this thread
     {
         Particle* p = p_arr + i;
@@ -208,9 +277,9 @@ void particle_push(Grid* grid, double step, part_t* logger, int stepnum)
         pz = p->pz;
         double pnorm2 = sqrt(px*px + py*py + pz*pz);
         #ifdef LOG
-            logger[((stepnum - 1)*grid->numparticles + i)*3] = p->x;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 1] = p->y;
-            logger[((stepnum - 1)*grid->numparticles + i)*3 + 2] = p->z;
+            logger[((stepnum - 1)*grid->num_particles + i)*3] = p->x;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 1] = p->y;
+            logger[((stepnum - 1)*grid->num_particles + i)*3 + 2] = p->z;
         #endif
 
     }

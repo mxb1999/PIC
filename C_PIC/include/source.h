@@ -1,7 +1,7 @@
 /*Define data structures necessary for EM sources
 Define different functions for adding E and B to the grid
 */
-#include "simulation.h"
+#include "simulation.hpp"
 typedef struct {
     int num_segments; //store the number of wire segments
     int isfunc; //store if the current is a function pointer or a static value
@@ -10,7 +10,7 @@ typedef struct {
     double* z; //store the z extrema of the wire segments: 2*num_segments
     double* current; //either a pointer to J or a pointer to a function which returns a time dependent J
 } Wire;
-typedef struct 
+typedef struct
 {
 
 } Coil;

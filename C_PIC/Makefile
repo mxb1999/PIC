@@ -1,5 +1,5 @@
-COMP=gcc
-CFLAGS=-g -Og  -lm -std=c99
+COMP=g++
+CFLAGS=-g -Og  -lm -std=c++11
 SRCDIR=src
 OBJDIR=bin
 NAME=fdtd_c
@@ -7,15 +7,18 @@ NAME=fdtd_c
 INC=-Iinclude -I/usr/include/hdf5
 LIB=-L/usr/lib/x86_64-linux-gnu/hdf5/serial/ -lhdf5
 
-_OBJ = time_loops.o setup_grid.o fdtd_main.o  initialize_fields.o hdf5_write.o
+_OBJ = time_loops.o setup_grid.o fdtd_main.o  initialize_fields.o hdf5_write.o rng.o push.o
 OBJ= $(patsubst %, $(OBJDIR)/%, $(_OBJ))
 
 
-$(OBJDIR)/%.o: $(SRCDIR)/%.c 
+$(OBJDIR)/%.o: $(SRCDIR)/%.c
+	$(COMP) -c -MMD -MP $(CFLAGS) $(INC) $(LIB) -o $@ $^
+
+$(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(COMP) -c -MMD -MP $(CFLAGS) $(INC) $(LIB) -o $@ $^
 
 $(NAME): $(OBJ)
-	h5cc $(CFLAGS) $(INC) $(LIB) $^ -o $@
+	h5c++ $(CFLAGS) $(INC) $(LIB) $^ -o $@
 
 .phony: clean
 

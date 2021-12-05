@@ -2,15 +2,15 @@
 #include "push.hu"
 #include "rng.hpp"
 
-Grid* new_grid(const int nx, const int ny, const int nz, const int numparticles, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, double mass, double charge)
+Grid* new_grid(const int nx, const int ny, const int nz, const int num_particles, double xmin, double xmax, double ymin, double ymax, double zmin, double zmax, double mass, double charge)
 {
     Grid* result = new Grid;
     space_t dx, dy, dz;
     dx = (xmax-xmin)/nx;
     dy = (ymax-ymin)/ny;
     dz = (zmax-zmin)/nz;
-    *result = {NULL, nx, ny, nz, numparticles, dx, dy, dz, xmin, xmax, ymin, ymax, zmin, zmax, NULL, NULL, mass, charge};
-    result->particles = new Particle[numparticles];
+    *result = {NULL, nx, ny, nz, num_particles, dx, dy, dz, xmin, xmax, ymin, ymax, zmin, zmax, NULL, NULL, mass, charge};
+    result->particles = new Particle[num_particles];
     result->e_field = (field_t*)calloc(sizeof(field_t),nx*ny*nz*3);
     result->b_field = (field_t*)calloc(sizeof(field_t),nx*ny*nz*3);
     return result;
@@ -33,7 +33,7 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
     double xmin = grid->xlims[0];
     double ymin = grid->ylims[0];
     double zmin = grid->zlims[0];
-    int nump = grid->numparticles;
+    int nump = grid->num_particles;
     switch(position_distribution)
     {
         case gaussian:

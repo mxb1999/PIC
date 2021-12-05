@@ -1,7 +1,7 @@
-/** 
+/**
  * Framework for particle push, will be fairly barebones initially, more robust once iterative methods are introduced
- * 
- * 
+ *
+ *
 */
 #ifndef PUSH
     #define PUSH
@@ -11,7 +11,7 @@
     #include <string.h>
     #include <hdf5/serial/hdf5.h>
     #include <omp.h>
-    #include "grid.h"
+    #include "simulation.hpp"
     #include "cuda_runtime.h"
     #define CHECKERR(err, lineno){\
         if(err != cudaSuccess)\

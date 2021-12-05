@@ -6,9 +6,9 @@ import matplotlib.animation as animation
 #plt.rcParams['animation.ffmpeg_path'] = r"C:\some_path\ffmpeg.exe"   # if necessary
 
 # Generate data for plotting
-Lx = Ly = 5e-5
+Lx = Ly = 1
 Nx = Ny = 100
-Nt = 475
+Nt = 100
 x = np.linspace(-Lx, Lx, Nx)
 y = np.linspace(-Lx, Lx, Nx)
 
@@ -24,10 +24,10 @@ def some_data(i):   # function returns a 2D data array
             array[i][j] = float(value)
     csvfile.close()
     return array
-    
+
 
 fig = plt.figure()
-extent = np.linspace(-1e-4, 1e-4, 100)
+extent = np.linspace(-1e-8, 1e-8, 100)
 cont = plt.contourf(x, y, some_data(0), levels=extent)    # first image on screen
 plt.colorbar()
 
