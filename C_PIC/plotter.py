@@ -8,7 +8,7 @@ import matplotlib.animation as animation
 # Generate data for plotting
 Lx = Ly = 1
 Nx = Ny = 100
-Nt = 100
+Nt = 99
 x = np.linspace(-Lx, Lx, Nx)
 y = np.linspace(-Lx, Lx, Nx)
 
@@ -16,18 +16,17 @@ array = np.ndarray((Nx, Ny))
 
 
 def some_data(i):   # function returns a 2D data array
-    print(i)
     csvfile = open("output/dataout%d.csv" % (i,))
     reader = csv.reader(csvfile, dialect='excel')
-    for i, row in enumerate(reader):
+    for k, row in enumerate(reader):
         for j, value in enumerate(row):
-            array[i][j] = float(value)
+            array[k][j] = float(value)
     csvfile.close()
     return array
 
 
 fig = plt.figure()
-extent = np.linspace(-1e-8, 1e-8, 100)
+extent = np.linspace(-1e-4, 1e-4, 256)
 cont = plt.contourf(x, y, some_data(0), levels=extent)    # first image on screen
 plt.colorbar()
 

@@ -3,8 +3,9 @@
 #include "push.hu"
 #include "rng.hpp"
 #define mu0 1.256637062e-6
+void dist_particles(Grid* grid, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance);
 
-void initialize(Grid* grid, double sigma_m, double sigma_e, double dt)
+void initialize(Grid* grid, double sigma_m, double sigma_e, double* dt, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance)
 {
     int nx = grid->nx;
     int ny = grid->ny;
@@ -13,10 +14,10 @@ void initialize(Grid* grid, double sigma_m, double sigma_e, double dt)
     double dy = (grid->ylims[1]-grid->ylims[0])/ny;
     double dz = (grid->zlims[1]-grid->zlims[0])/nz;
     double ratio = 1/sqrt(3);
-    dt = dx*ratio/c;
-    initializeE(grid, sigma_e, dt);
-    initializeH(grid, sigma_m, dt);
-
+    *dt = sqrt(dx*dx + dy*dy + dz*dz)*ratio/c;
+    initializeE(grid, sigma_e, *dt);
+    initializeH(grid, sigma_m, *dt);
+    dist_particles(grid, position_distribution, momentum_distribution, temperature, variance);
 };
 /*
 void free_grid(Grid* grid)
@@ -31,8 +32,7 @@ void free_grid(Grid* grid)
     delete [] grid->j;
     delete grid;
 }*/
-void setup_grid_constb(Grid* grid, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance, field_t b[3])
-{
+void dist_particles(Grid* grid, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance) {
     double posvariancex = fmin(fabs(grid->xlims[0]), fabs(grid->xlims[1]));
     double posvariancey = fmin(fabs(grid->ylims[0]), fabs(grid->ylims[1]));
     double posvariancez = fmin(fabs(grid->zlims[0]), fabs(grid->zlims[1]));
@@ -43,10 +43,12 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
     double ymin = grid->ylims[0];
     double zmin = grid->zlims[0];
     int nump = grid->num_particles;
+    printf("Mass %e\n", M_I);
     switch(position_distribution)
     {
         case gaussian:
-            {RandGen* gen_positionx = initializeRNG(412<<3, 0, posvariancex);
+            {
+            RandGen* gen_positionx = initializeRNG(412<<3, 0, posvariancex);
             RandGen* gen_positiony = initializeRNG(341<<2, 0, posvariancey);
             RandGen* gen_positionz = initializeRNG(234<<1, 0, posvariancez);
             for(int i = 0; i < nump; i++)
@@ -55,6 +57,7 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
                 p->x = normal_deviation(gen_positionx);
                 p->y = normal_deviation(gen_positiony);
                 p->z = normal_deviation(gen_positionz);
+                printf("%e %e %e\n", p->x, p->y, p->z);
             };
             free(gen_positionx);
             free(gen_positiony);
@@ -113,6 +116,11 @@ void setup_grid_constb(Grid* grid, distribution position_distribution, distribut
             };}
         break;
     }
+}
+void setup_grid_constb(Grid* grid, distribution position_distribution, distribution momentum_distribution, const double temperature, double variance, field_t b[3])
+{
+
+
     field_t* hx = grid->hx;
     field_t* hy = grid->hy;
     field_t* hz = grid->hz;
@@ -168,12 +176,12 @@ Grid* define_grid(double* dimsx, double* dimsy, double* dimsz,
     grid->dx = (XMAX-XMIN)/(double)nx;
     grid->dy = (YMAX-YMIN)/(double)ny;
     grid->dz = (ZMAX-ZMIN)/(double)nz;
-    grid->ex = (double*)calloc(sizeof(double), (nx-1)*ny*nz);
+    /*grid->ex = (double*)calloc(sizeof(double), (nx-1)*ny*nz);
     grid->ey = (double*)calloc(sizeof(double), nx*(ny-1)*nz);
     grid->ez = (double*)calloc(sizeof(double), nx*ny*(nz-1));
     grid->hx = (double*)calloc(sizeof(double), nx*(ny-1)*(nz-1));
     grid->hy = (double*)calloc(sizeof(double), (nx-1)*ny*(nz-1));
-    grid->hz = (double*)calloc(sizeof(double), (nx-1)*(ny-1)*nz);
+    grid->hz = (double*)calloc(sizeof(double), (nx-1)*(ny-1)*nz);*/
     grid->exself = (double*)calloc(sizeof(double), (nx-1)*ny*nz);
     grid->exhyc = (double*)calloc(sizeof(double), (nx-1)*ny*nz);
     grid->exhzc = (double*)calloc(sizeof(double), (nx-1)*ny*nz);
@@ -205,6 +213,12 @@ Grid* define_grid(double* dimsx, double* dimsy, double* dimsz,
     grid->rho = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->mu = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->eps = (double*)calloc(sizeof(double), nx*ny*nz);
-    grid->particles = (Particle*)calloc(sizeof(Particle), num_particles);
+    cudaMallocManaged(&grid->particles, sizeof(Particle)*num_particles);
+    cudaMallocManaged(&grid->ex, sizeof(field_t)*(nx-1)*ny*nz);
+    cudaMallocManaged(&grid->ey, sizeof(field_t)*nx*(ny-1)*nz);
+    cudaMallocManaged(&grid->ez, sizeof(field_t)*nx*ny*(nz-1));
+    cudaMallocManaged(&grid->hx, sizeof(field_t)*nx*(ny-1)*(nz-1));
+    cudaMallocManaged(&grid->hy, sizeof(field_t)*(nx-1)*ny*(nz-1));
+    cudaMallocManaged(&grid->hz, sizeof(field_t)*(nx-1)*(ny-1)*nz);
     return grid;
 };

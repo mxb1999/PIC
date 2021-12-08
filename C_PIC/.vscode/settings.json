@@ -6,7 +6,8 @@
         "random": "c",
         "array": "cpp",
         "__tuple": "cpp",
-        "algorithm": "c"
+        "algorithm": "c",
+        "cmath": "cpp"
     },
     "python.linting.flake8Enabled": true,
     "python.linting.enabled": true

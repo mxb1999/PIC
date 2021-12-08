@@ -43,6 +43,9 @@ void interpolate_B(Grid* grid, int ix, int iy, int iz, double* position, double*
     double ydiff = (target[1]-iy*dy)/dy;
     double zdiff = (target[2] - iz*dz)/dz;
     double a[] = {1-xdiff, xdiff, 1-ydiff, ydiff, 1-zdiff, zdiff};
+    int not_lastx = ix != nx-1;
+    int not_lasty = iy != ny-1;
+    int not_lastz = iz != nz-1;
     double SB[] = {a[2*0]  , a[2*1]  , a[2*2],
                    a[2*0+1], 0       , 0,
                    0       , a[2*1+1], 0,
@@ -51,11 +54,12 @@ void interpolate_B(Grid* grid, int ix, int iy, int iz, double* position, double*
                    0       , 0       , a[2*2+1],
                    0       , 0       , 0,
                    0       , 0       , 0};
+
     //add all B components
     target[0] += SB[0*3+0]*Bx(ix, iy, iz);
-    target[0] += SB[1*3+0]*Bx(ix+1, iy, iz);
+    target[0] += SB[1*3+0]*Bx(ix+not_lastx, iy, iz)*not_lastx;
     target[1] += SB[0*3+1]*By(ix, iy, iz);
-    target[1] += SB[2*3+1]*By(ix, iy+1, iz);
+    target[1] += SB[2*3+1]*By(ix, iy+not_lasty, iz)*not_lasty;
     target[2] += SB[0*3+2]*Bz(ix, iy, iz);
-    target[2] += SB[5*3+2]*Bz(ix, iy, iz+1);
+    target[2] += SB[5*3+2]*Bz(ix, iy, iz+not_lastz)*not_lastz;
 };

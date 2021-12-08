@@ -81,31 +81,39 @@ void start_loop2DFDTD(Grid* grid, double dt, int nt)
 
 
 }
-
-void start_loop3DFDTD(Grid* grid, double dt, int nt)
+#define STEP 10000
+void start_loop3DFDTD(Grid* grid, double dt, double final_time)
 {
-    int nx, ny, nz;
-    double dx, dy, dz;
+    int nx = NX, ny = NY, nz = NZ;
+    double dx = DX, dy = DY, dz = DZ;
     hid_t file, set, space;
     herr_t err_h5;
-    hsize_t dims[] = {(nt), grid->num_particles, 3};
-    DEFINE_GRID_CONSTANTS;
+    long numsteps = final_time/dt;
+    hsize_t dims[] = {numsteps/STEP, grid->num_particles, 3};
+    //DEFINE_GRID_CONSTANTS;
     double ratio = 1/sqrt(3);
-    dt = sqrt(pow(dx,2) + pow(dy,2)+pow(dz,2))/(c);
+    //dt = sqrt(pow(dx,2) + pow(dy,2)+pow(dz,2))/(c);
     printf("dt %e\n", dt);
-    part_t* logger = (part_t*)malloc(sizeof(part_t)*grid->num_particles*3*(nt));
-    for(int time = 0; time < nt; time++)
+    int cnt = 0;
+    int nthreads = 256;
+    int nblocks = NP/nthreads + 1;
+    //part_t* logger = (part_t*)malloc(sizeof(part_t)*grid->num_particles*3*(numsteps/STEP));
+    double time_track = 0.0;
+    int tcnt = 0;
+    int pcnt = 0;
+    for(double time = 0; time <= final_time; time+=dt)
     {
-        printf("%e\n", Hz(nx/2, ny/2, nz/2));
+        tcnt++;
         updateH3D(grid);
         updateE3D(grid);
-        //particle_push(grid, dt, logger, time);
+        gpu_particle_push(grid, dt, NULL, time);
+        current_deposition(grid, dt);
         Hz(nx/2, ny/2, nz/2) += add_ricker(time*dt, 0.0, dt, grid);
-        if (time % 10 == 0) {
+        if (tcnt % 10 == 0) {
             char filename[100];
-            sprintf(filename, "output/dataout%d.csv", time/10);
+            sprintf(filename, "output/dataout%d.csv", pcnt);
             FILE* snapshot =fopen(filename, "w");
-            for(int i = 0; i < ny; i++)
+            for(int i = 0; i < ny-1; i++)
             {
                 for(int j = 0; j < nz-1; j++)
                 {
@@ -114,14 +122,21 @@ void start_loop3DFDTD(Grid* grid, double dt, int nt)
                 fprintf(snapshot, "%e\n", Hz((nx)/2,i,nz-1));
             }
             fclose(snapshot);
+            pcnt++;
         }
+        if (time_track > final_time/10-1e-15) {
+            cnt++;
+            printf("%d%c Done\n", 10*cnt, '%');
+            time_track = 0.0;
+        }
+        time_track += dt;
     }
-    file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    /*file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     space = H5Screate_simple(3, dims, NULL);
     set = H5Dcreate2(file, "positions", H5T_IEEE_F64LE, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     err_h5 = H5Dwrite(set, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, logger);
     err_h5 = H5Dclose(set);
     err_h5 = H5Sclose(space);
     err_h5 = H5Fclose(file);
-    free(logger);
+    free(logger);*/
 }
