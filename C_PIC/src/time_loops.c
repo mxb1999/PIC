@@ -86,7 +86,7 @@ void start_loop3DFDTD(Grid* grid, double dt, double final_time)
 {
     int nx = NX, ny = NY, nz = NZ;
     double dx = DX, dy = DY, dz = DZ;
-    hid_t file, set, space;
+    hid_t particle_file, field_file, fieldset, fieldspace, pset, pspace;
     herr_t err_h5;
     long numsteps = final_time/dt;
     hsize_t dims[] = {numsteps/STEP, grid->num_particles, 3};
@@ -101,37 +101,76 @@ void start_loop3DFDTD(Grid* grid, double dt, double final_time)
     double time_track = 0.0;
     int tcnt = 0;
     int pcnt = 0;
+    double s1 = 0.0, s2 = 0.0, s3 = 0.0;
+    double c0, c1, c2, c3;
+    field_t* log_efield = (field_t*)malloc(sizeof(field_t)*NX*NY*NZ*3*10);
+    field_t* log_bfield = (field_t*)malloc(sizeof(field_t)*NX*NY*NZ*3*10);
+    part_t* log_particle = (part_t*)malloc(sizeof(part_t)*NP*3*10);
+    field_file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    particle_file = H5Fcreate("field.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
     for(double time = 0; time <= final_time; time+=dt)
     {
         tcnt++;
-        updateH3D(grid);
-        updateE3D(grid);
+        c0 = omp_get_wtime();
+        solve_fields_gpu(grid, dt, 0.0, 0.0, eps0, mu0);
+        c1 = omp_get_wtime();
+        //updateH3D(grid);
+        //updateE3D(grid);
         gpu_particle_push(grid, dt, NULL, time);
-        current_deposition(grid, dt);
-        Hz(nx/2, ny/2, nz/2) += add_ricker(time*dt, 0.0, dt, grid);
-        if (tcnt % 10 == 0) {
+        c2 = omp_get_wtime();
+        //current_deposition(grid, dt);
+        c3 = omp_get_wtime();
+        s1 += (c1-c0);
+        s2 += (c2-c1);
+        s3 += (c3-c2);
+        //Ez(nx/2, ny/2, nz/2) += 1e-4*add_ricker(time*dt, 0.0, dt, grid);
+       /* if (tcnt) {
             char filename[100];
             sprintf(filename, "output/dataout%d.csv", pcnt);
             FILE* snapshot =fopen(filename, "w");
-            for(int i = 0; i < ny-1; i++)
+            for(int i = 0; i < ny; i++)
             {
-                for(int j = 0; j < nz-1; j++)
+                for(int j = 0; j < nz-2; j++)
                 {
-                    fprintf(snapshot, "%e, ", Hz((nx)/2,i,j));
+                    fprintf(snapshot, "%e, ", Ez((nx)/2,i,j));
                 }
-                fprintf(snapshot, "%e\n", Hz((nx)/2,i,nz-1));
+                fprintf(snapshot, "%e\n", Ez((nx)/2,i,nz-2));
             }
             fclose(snapshot);
             pcnt++;
-        }
+        }*/
         if (time_track > final_time/10-1e-15) {
             cnt++;
             printf("%d%c Done\n", 10*cnt, '%');
             time_track = 0.0;
+            char filename[64], filename2[64];
+            sprintf(filename, "output/field_dataout%d.csv", pcnt);
+            FILE* snapshot =fopen(filename, "w");
+            for(int i = 0; i < ny; i++)
+            {
+                for(int j = 0; j < nz-2; j++)
+                {
+                    fieldEz((nx)/2,i,j));
+                }
+                fprintf(snapshot, "%e\n", Ez((nx)/2,i,nz-2));
+            }
+            fclose(snapshot);
+            sprintf(filename, "output/particle_dataout%d.csv", pcnt);
+            FILE* snapshot = fopen(filename, "w");
+            for(int i = 0; i < ny; i++)
+            {
+                for(int j = 0; j < nz-2; j++)
+                {
+                    fprintf(snapshot, "%e, ", Ez((nx)/2,i,j));
+                }
+                fprintf(snapshot, "%e\n", Ez((nx)/2,i,nz-2));
+            }
+            fclose(snapshot);
+            pcnt++;
         }
         time_track += dt;
     }
-    /*file = H5Fcreate("positions.h5", H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+    printf("%e %e %e\n", s1, s2, s3);
     space = H5Screate_simple(3, dims, NULL);
     set = H5Dcreate2(file, "positions", H5T_IEEE_F64LE, space, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
     err_h5 = H5Dwrite(set, H5T_NATIVE_DOUBLE, H5S_ALL, H5S_ALL, H5P_DEFAULT, logger);

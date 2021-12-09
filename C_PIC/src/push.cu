@@ -67,13 +67,19 @@ void interpolate_B(Grid grid, int ix, int iy, int iz, double* position, double* 
     target[2] += SB[0*3+2]*Hz_cu(ix-!not_lastx, iy-!not_lasty, iz)*mu_loc;
     target[2] += SB[5*3+2]*Hz_cu(ix-!not_lastx, iy-!not_lasty, iz+not_lastz)*mu_loc*not_lastz;
 };
+#define TRILIN_INTERP(x, y, z, xa, ya, za) {\
+    xd = 1-fabs((x)-(xa))/dx;\
+    yd = 1-fabs((y)-(ya))/dy;\
+    zd = 1-fabs((z)-(za))/dz;\
+    weight = xd*yd*zd;\
+};
 __global__
 void particle_push_cu(Grid grid, double step, part_t* logger, int stepnum, int max_particles) {
     //update each particle according to the fields at its current position
     //will want to seperate the field gather and the particle push steps later, for now focus on basic procedure
     int base_index = (blockIdx.x*blockDim.x + threadIdx.x)/max_particles;//base particle
     int numparticles = grid.num_particles;
-    if (base_index > numparticles) {
+    if (base_index >= numparticles) {
         return;
     }
     part_t m = grid.mass_p;
@@ -83,7 +89,10 @@ void particle_push_cu(Grid grid, double step, part_t* logger, int stepnum, int m
     part_t q = grid.q_p;
     Particle* p_arr = grid.particles;
     int p_index;
-    for(p_index = base_index; p_index < max_particles; p_index++) {
+    int nx = grid.nx;
+    int ny = grid.ny;
+    int nz = grid.nz;
+    for(p_index = base_index; p_index < base_index + max_particles; p_index++) {
 
         Particle* p = &p_arr[p_index];
         part_t px, py, pz, x, y, z;
@@ -144,12 +153,69 @@ void particle_push_cu(Grid grid, double step, part_t* logger, int stepnum, int m
         p->px = p_temp[0] + elocal[0]*qconst;
         p->py = p_temp[1] + elocal[1]*qconst;
         p->pz = p_temp[2] + elocal[2]*qconst;
+        double vx = (p_temp[0] + elocal[0]*qconst)/m;
+        double vy = (p_temp[1] + elocal[1]*qconst)/m;
+        double vz = (p_temp[1] + elocal[1]*qconst)/m;
         #ifdef LOG
             logger[(stepnum*numparticles + p_index)*3] = x;
             logger[(stepnum*numparticles + p_index)*3 + 1] = y;
             logger[(stepnum*numparticles + p_index)*3 + 2] = z;
         #endif
+        int not_lastx = (ix != nx-1);
+        int not_lasty = (iy != ny-1);
+        int not_lastz = (iz != nz-1);
+        double xg[] = {dx*ix + xmin, dx*(ix+1) + xmin};
+        double yg[] = {dy*iy + ymin, dy*(iy+1) + ymin};
+        double zg[] = {dz*iz + zmin, dz*(iz+1) + zmin};
+        int ox = ix, oy = iy, oz = iz;
+        double xd, yd, zd, weight;
+        double jx_p = vx*q;
+        double jy_p = vy*q;
+        double jz_p = vz*q;
+        //ix iy iz
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
 
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight);
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight);
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight);
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
+        //ix+1 iy iz
+        ox = ix + not_lastx;
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight*(not_lastx));
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight*(not_lastx));
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight*(not_lastx));
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
+        //ix+1 iy+1 iz
+        oy = iy + not_lasty;
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight*(not_lastx)*(not_lasty));
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight*(not_lastx)*(not_lasty));
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight*(not_lastx)*(not_lasty));
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
+        //ix+1 iy iz+1
+        oy = iy;
+        oz = iz + not_lastz;
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight*(not_lastx)*(not_lastz));
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight*(not_lastx)*(not_lastz));
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight*(not_lastx)*(not_lastz));
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
+        //ix iy+1 iz+1
+        ox = ix;
+        oy = iy + not_lasty;
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight*(not_lastz)*(not_lasty));
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight*(not_lastz)*(not_lasty));
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight*(not_lastz)*(not_lasty));
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
+        //ix+1 iy+1 iz+1
+        ox = ix + not_lastx;
+        TRILIN_INTERP(x, y, z, xg[ox-ix], yg[oy-iy], zg[oz-iz]);
+        atomicAdd(&Jx_cu(ox, oy,  oz),  jx_p*weight*(not_lastx)*(not_lasty)*(not_lastz));
+        atomicAdd(&Jy_cu(ox, oy,  oz),  jy_p*weight*(not_lastx)*(not_lasty)*(not_lastz));
+        atomicAdd(&Jz_cu(ox, oy,  oz),  jz_p*weight*(not_lastx)*(not_lasty)*(not_lastz));
+        atomicAdd(&RHO_cu(ox, oy,  oz),  weight*q);
     }
 }
 #define TpB 256
@@ -170,4 +236,5 @@ void gpu_particle_push(Grid* grid, double step, part_t* logger, int stepnum) {
         printf("%s\n", cudaGetErrorString(stat));
         getchar();
     }
+    cudaDeviceSynchronize();
 }

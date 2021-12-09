@@ -26,7 +26,7 @@ def some_data(i):   # function returns a 2D data array
 
 
 fig = plt.figure()
-extent = np.linspace(-1e-4, 1e-4, 256)
+extent = np.linspace(-5e-12, 5e-12, 256)
 cont = plt.contourf(x, y, some_data(0), levels=extent)    # first image on screen
 plt.colorbar()
 

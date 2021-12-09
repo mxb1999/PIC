@@ -7,26 +7,26 @@ CUODIR=bin/cuda
 NAME=fdtd_c
 
 INC=-Iinclude -I/usr/include/hdf5
-LIB=-L/usr/lib/x86_64-linux-gnu/hdf5/serial/ -lhdf5 -lcuda -lcudart
+LIB=-L/usr/lib/x86_64-linux-gnu/hdf5/serial/ -lhdf5 -lcuda -lcudart -fopenmp
 
 _OBJ = time_loops.o setup_grid.o fdtd_main.o  initialize_fields.o hdf5_write.o rng.o push.o gather_current.o
 OBJ= $(patsubst %, $(OBJDIR)/%, $(_OBJ))
 
-_CUOBJ = push.o
+_CUOBJ = push.o fdtd_gpu.o
 CUOBJ= $(patsubst %, $(CUODIR)/%, $(_CUOBJ))
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
 	$(COMP) -c -MMD -MP $(CFLAGS) $(INC) $(LIB) -o $@ $^
 
 $(CUODIR)/%.o: $(SRCDIR)/%.cu
-	$(NVCC) -c -Iinclude $^ -o $@
+	$(NVCC) -c -lineinfo -Xcompiler -rdynamic -arch=sm_70 -g -G -Iinclude $^ -o $@
 
 
 $(OBJDIR)/%.o: $(SRCDIR)/%.cpp
 	$(COMP) -c -MMD -MP $(CFLAGS) $(INC) $(LIB) -o $@ $^
 
 $(NAME): $(OBJ) $(CUOBJ)
-	$(NVCC) -dlink $(CUOBJ) -o $(OBJDIR)/all_cu.o
+	$(NVCC) -dlink -lineinfo -Xcompiler -rdynamic -arch=sm_70 -g -G $(CUOBJ) -o $(OBJDIR)/all_cu.o
 	h5c++ $(CFLAGS) $(INC) $(LIB) $^ $(OBJDIR)/all_cu.o -o $@
 
 .phony: clean

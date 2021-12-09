@@ -70,6 +70,7 @@ void updateE2DTMz(Grid* grid)
 void updateE3D(Grid* grid)
 {
     int nx = NX, ny = NY, nz = NZ;
+    #pragma omp parallel for num_threads(omp_get_max_threads())
     for(int i = 0; i < nx-1; i++)
     {
         for(int j = 0; j < ny-1; j++)
@@ -95,6 +96,7 @@ void updateE3D(Grid* grid)
 void updateH3D(Grid* grid)
 {
     int nx = NX, ny = NY, nz = NZ;
+    #pragma omp parallel for num_threads(omp_get_max_threads())
     for(int i = 0; i < nx-1; i++)
     {
         int lastx = i == nx-2;
@@ -206,8 +208,8 @@ int main()
     double dt = 1e-13;
     M_I = m;
     Q_I = 1e-19;
-    initialize(grid, 0.0, 0.0, &dt, unif, unif, 1e3*m,500*m);
-    double time = dt*1000;
+    initialize(grid, 0.0, 0.0, &dt, unif, unif, 1e5*m,500*m);
+    double time = dt*1000000;
     printf("%e %e\n", time, dt);
     start_loop3DFDTD(grid, dt, time);
     return 0;

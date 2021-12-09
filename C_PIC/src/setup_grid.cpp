@@ -14,7 +14,7 @@ void initialize(Grid* grid, double sigma_m, double sigma_e, double* dt, distribu
     double dy = (grid->ylims[1]-grid->ylims[0])/ny;
     double dz = (grid->zlims[1]-grid->zlims[0])/nz;
     double ratio = 1/sqrt(3);
-    *dt = sqrt(dx*dx + dy*dy + dz*dz)*ratio/c;
+    *dt = dx*ratio/c;
     initializeE(grid, sigma_e, *dt);
     initializeH(grid, sigma_m, *dt);
     dist_particles(grid, position_distribution, momentum_distribution, temperature, variance);
@@ -207,14 +207,19 @@ Grid* define_grid(double* dimsx, double* dimsy, double* dimsz,
     grid->oldHx = (double*)calloc(sizeof(double), 12*ny*nz);
     grid->oldHy = (double*)calloc(sizeof(double), 12*nx*nz);
     grid->oldHz = (double*)calloc(sizeof(double), 12*ny*nx);
-    grid->jx = (double*)calloc(sizeof(double), nx*ny*nz);
+    /*grid->jx = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->jy = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->jz = (double*)calloc(sizeof(double), nx*ny*nz);
-    grid->rho = (double*)calloc(sizeof(double), nx*ny*nz);
+    grid->rho = (double*)calloc(sizeof(double), nx*ny*nz);*/
     grid->mu = (double*)calloc(sizeof(double), nx*ny*nz);
     grid->eps = (double*)calloc(sizeof(double), nx*ny*nz);
     cudaMallocManaged(&grid->particles, sizeof(Particle)*num_particles);
     cudaMallocManaged(&grid->ex, sizeof(field_t)*(nx-1)*ny*nz);
+    cudaMallocManaged(&grid->jx, sizeof(field_t)*nx*ny*nz);
+    cudaMallocManaged(&grid->jy, sizeof(field_t)*nx*ny*nz);
+    cudaMallocManaged(&grid->jz, sizeof(field_t)*nx*ny*nz);
+    cudaMallocManaged(&grid->rho, sizeof(field_t)*nx*ny*nz);
+
     cudaMallocManaged(&grid->ey, sizeof(field_t)*nx*(ny-1)*nz);
     cudaMallocManaged(&grid->ez, sizeof(field_t)*nx*ny*(nz-1));
     cudaMallocManaged(&grid->hx, sizeof(field_t)*nx*(ny-1)*(nz-1));

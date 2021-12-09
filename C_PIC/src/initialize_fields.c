@@ -42,7 +42,7 @@ void initializeE(Grid* grid, double sigma_e, double dt)
                 CEzSelf(i,j,k) = (1 - sigma_e*dt/(2*epsilon))/(1 + sigma_e*dt/(2*epsilon));
                 CEzhy(i,j,k) = (dt/(epsilon*dx))*(1/(1+sigma_e*dt/(2*epsilon)));
                 CEzhx(i,j,k) = (dt/(epsilon*dy))*(1/(1+sigma_e*dt/(2*epsilon)));
-                
+
             }
         }
     }

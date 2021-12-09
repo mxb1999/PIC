@@ -14,6 +14,8 @@
 #include <cuda_runtime.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
+#include <string.h>
 #ifndef SIMULATION
     #define SIMULATION
     typedef double part_t; // type to experiment with mixed precision down the line
@@ -68,7 +70,11 @@
     #define Jy(i, j, k) ACCESS3D(GRID->jy, i, j, k, ny, nz)
     #define Jz(i, j, k) ACCESS3D(GRID->jz, i, j, k, ny, nz)
     #define RHO(i, j, k) ACCESS3D(GRID->rho, i, j, k, ny, nz)
-    #define ACCESS3D(array, i, j, k, size2, size3) array[((i)*(size2)+(j))*(size3)+(k)]
+    #define Jx_cu(i, j, k) ACCESS3D(GRID.jx, i, j, k, ny, nz)
+    #define Jy_cu(i, j, k) ACCESS3D(GRID.jy, i, j, k, ny, nz)
+    #define Jz_cu(i, j, k) ACCESS3D(GRID.jz, i, j, k, ny, nz)
+    #define RHO_cu(i, j, k) ACCESS3D(GRID.rho, i, j, k, ny, nz)
+    #define ACCESS3D(array, i, j, k, size2, size3) (array)[((i)*(size2)+(j))*(size3)+(k)]
     #define Ex(i, j, k) ACCESS3D(GRID->ex, i, j, k, ny, nz)
     #define Ey(i, j, k) ACCESS3D(GRID->ey, i, j, k, ny-1, nz)
     #define Ez(i, j, k) ACCESS3D(GRID->ez, i, j, k, ny, nz-1)
@@ -242,6 +248,7 @@ void initialize(Grid* grid, double sigma_m, double sigma_e, double* dt, distribu
     extern void update_from_particles(Grid* grid, double dt);
     void current_deposition(Grid* grid, double dt);
     void gpu_particle_push(Grid* grid, double step, part_t* logger, int stepnum);
+void solve_fields_gpu(Grid* grid, double dt, double sigma_e, double sigma_m, double epsilon, double mu);
 
 #define c  299792458.0
 #define eps0  8.85418782e-12
